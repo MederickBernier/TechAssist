@@ -18,6 +18,7 @@ This project was designed for portfolio showcase purposes, particularly for role
 - **Roles & Authorization** – Admin and regular users.
 - **Assignment** – Assign tickets to users (admin only).
 - **Audit Log** – Track every change with timestamps & actors.
+- **Secure Credentials Management** – Uses `.env` (excluded from repo) for sensitive config.
 - **Dockerized Environment** – PHP‑FPM, Nginx, MariaDB, phpMyAdmin.
 
 ---
@@ -40,19 +41,25 @@ git clone https://github.com/MederickBernier/TechAssist.git
 cd TechAssist
 ```
 
-### 2. Start with Docker
+### 2. Environment Variables
+Copy `.env.example` to `.env` and adjust values if needed:
+```bash
+cp .env.example .env
+```
+
+### 3. Start with Docker
 ```bash
 docker compose up -d --build
 ```
 
-### 3. Initialize the Database
+### 4. Initialize the Database
 ```bash
 docker compose exec -T db mariadb -utechassist -ptechassist techassist < ./sql/init/01_schema.sql
 docker compose exec -T db mariadb -utechassist -ptechassist techassist < ./sql/init/02_features.sql
 docker compose exec -T db mariadb -utechassist -ptechassist techassist < ./sql/init/03_seed_data.sql
 ```
 
-### 4. Access the application
+### 5. Access the application
 - **App:** http://localhost:8080  
 - **phpMyAdmin:** http://localhost:8081  
   - Server: `db`  
@@ -77,13 +84,14 @@ docker compose exec -T db mariadb -utechassist -ptechassist techassist < ./sql/i
 ```
 .
 ├── docker/                 # Docker config files
-├── public/                  # Public web root
+├── public/                 # Public web root
 ├── sql/init/                # DB schema & seed scripts
 ├── src/                     # PHP application code
 │   ├── Controllers/         # Ticket & Auth controllers
 │   ├── Models/              # Data access logic
 │   ├── Views/               # HTML templates
 │   └── bootstrap.php        # App bootstrap
+├── .env.example             # Example environment variables
 ├── docker-compose.yml
 └── README.md
 ```
