@@ -1,139 +1,138 @@
 # TechAssist – Simple PHP Ticketing System
 
-TechAssist is a lightweight IT helpdesk/ticketing system built in **vanilla PHP** (no framework) with **MySQL/MariaDB**, containerized using **Docker** for easy setup.  
-It was rebuilt and modernized from an older PHP class project to serve as a clean, easy‑to‑run demonstration for full‑stack PHP development.
+Lightweight IT helpdesk/ticketing built in **vanilla PHP 8** (no framework) with **MariaDB/MySQL**, containerized via **Docker Compose**.  
+Originally a class project, rebuilt to serve as a **clean portfolio piece** and a **maintenance-friendly codebase**.
 
-This project was designed for portfolio showcase purposes, particularly for roles requiring work on **existing codebases** (maintenance, feature addition, bug fixing).
+## Why this matters
+- Demonstrates **backend fundamentals** without hiding behind a framework: routing, controllers, models, views, validation.
+- Shows **security & data integrity** awareness (authZ/authN, CSRF, input validation, prepared statements).
+- Runs anywhere with Docker; onboarding is **one command** away.
 
 ---
 
 ## ✨ Features
+- **Ticket CRUD**: create, view, update, close.
+- **Comments / Activity thread** per ticket.
+- **Status workflow**: Open → In‑Progress → Closed (timestamps).
+- **Search / Filter / Pagination** to navigate large lists.
+- **Flash messages & validation** for user actions.
+- **Roles & authorization**: Admin vs standard users.
+- **Assignment**: assign tickets to users (admin only).
+- **Audit Log**: every change stamped with actor + time.
+- **Demo data seeder** to explore quickly.
+- **Dockerized env**: PHP‑FPM, Nginx, MariaDB, phpMyAdmin.
 
-- **Ticket CRUD** – Create, view, update ticket statuses.
-- **Comments / Activity Thread** – Keep discussion per ticket.
-- **Status Workflow** – Open → In Progress → Closed (with timestamps).
-- **Search, Filtering & Pagination** – Quickly find tickets.
-- **Flash Messages & Validation** – Feedback for all form actions.
-- **Demo Data Seeder** – Populate DB with sample users/tickets.
-- **Roles & Authorization** – Admin and regular users.
-- **Assignment** – Assign tickets to users (admin only).
-- **Audit Log** – Track every change with timestamps & actors.
-- **Secure Credentials Management** – Uses `.env` (excluded from repo) for sensitive config.
-- **Dockerized Environment** – PHP‑FPM, Nginx, MariaDB, phpMyAdmin.
-
----
-
-## 📦 Tech Stack
-
-- **PHP 8.x** – Core application logic (no frameworks).
-- **MariaDB 10.x** – Database.
-- **Nginx** – Web server.
-- **Docker Compose** – Local development environment.
-- **phpMyAdmin** – DB management UI.
+> Screenshots available in `docs/images/` (login, dashboard, ticket flows, audit).
 
 ---
 
-## 🚀 Getting Started
+## 🧰 Tech Stack
+- **PHP 8.x** (no framework, readable vanilla PHP)
+- **MariaDB 10.x** (MySQL compatible)
+- **Nginx** as web server
+- **Docker Compose** for local deployment
+- **phpMyAdmin** for DB admin
 
-### 1. Clone the repository
+---
+
+## 🚀 Quick Start
+
+### 1) Clone
 ```bash
 git clone https://github.com/MederickBernier/TechAssist.git
 cd TechAssist
 ```
 
-### 2. Environment Variables
-Copy `.env.example` to `.env` and adjust values if needed:
+### 2) Environment
 ```bash
 cp .env.example .env
+# edit .env as needed (DB creds, app host/ports)
 ```
 
-### 3. Start with Docker
+### 3) Up (Docker)
 ```bash
 docker compose up -d --build
 ```
 
-### 4. Initialize the Database
+### 4) Initialize DB
 ```bash
 docker compose exec -T db mariadb -utechassist -ptechassist techassist < ./sql/init/01_schema.sql
 docker compose exec -T db mariadb -utechassist -ptechassist techassist < ./sql/init/02_features.sql
 docker compose exec -T db mariadb -utechassist -ptechassist techassist < ./sql/init/03_seed_data.sql
 ```
 
-### 5. Access the application
+### 5) Access
 - **App:** http://localhost:8080  
-- **phpMyAdmin:** http://localhost:8081  
-  - Server: `db`  
-  - User: `techassist`  
-  - Pass: `techassist`
+- **phpMyAdmin:** http://localhost:8081 (server: `db`, user: `techassist`, pass: `techassist`)
+
+### Demo accounts
+| Role  | Username | Password |
+|-------|----------|----------|
+| Admin | admin    | password |
+| User  | demo     | password |
+| User  | alice    | password |
+| User  | bob      | password |
 
 ---
 
-## 🔑 Demo Credentials
-
-| Role   | Username | Password |
-|--------|----------|----------|
-| Admin  | admin    | password |
-| User   | demo     | password |
-| User   | alice    | password |
-| User   | bob      | password |
-
----
-
-## 📂 Project Structure
-
+## 🧱 Project Structure
 ```
 .
-├── docker/                 # Docker config files
-├── public/                 # Public web root
-├── sql/init/                # DB schema & seed scripts
-├── src/                     # PHP application code
-│   ├── Controllers/         # Ticket & Auth controllers
-│   ├── Models/              # Data access logic
-│   ├── Views/               # HTML templates
-│   └── bootstrap.php        # App bootstrap
-├── .env.example             # Example environment variables
+├── docker/                 # Docker config
+├── public/                 # Web root
+├── sql/init/               # Schema + seed scripts
+├── src/                    # App code
+│   ├── Controllers/        # Ticket & Auth controllers
+│   ├── Models/             # Data access
+│   ├── Views/              # Templates
+│   └── bootstrap.php       # App bootstrap
+├── .env.example
 ├── docker-compose.yml
 └── README.md
 ```
 
 ---
 
-## 📝 How to Use
+## 🔒 Security & Data Practices
+- CSRF tokens on state‑changing requests.
+- Input validation + prepared statements to avoid SQLi.
+- Role checks on admin routes.
+- Passwords stored with modern hashing (if applicable in your fork).
+- `.env` for secrets (excluded from VCS).
 
-1. **Login** with provided credentials.
-2. Create new tickets, assign them, add comments.
-3. Filter, search, and paginate ticket lists.
-4. As admin, access the **Audit Log** to see all changes.
-5. Manage DB from phpMyAdmin if needed.
+> This is a portfolio app; review & harden before internet exposure (HTTPS, headers, rate limits, logs).
 
 ---
 
-## 📸 Screenshots
+## 🏎️ Performance Notes
+- Query indexes added where relevant.
+- Pagination for list endpoints.
+- Simple caching opportunities noted as TODOs.
 
-### Login Page
-![Login](docs/images/login.jpg)
+---
 
-### Dashboard
-![Dashboard](docs/images/index.jpg)
+## 🧪 Testing (optional)
+Light smoke tests can be added with PHP‑CLI scripts or Pest/PHPUnit.  
+Example layout (not included by default):
+```
+tests/
+  TicketFlowTest.php
+  AuthTest.php
+```
 
-### Ticket Creation
-![Create Ticket](docs/images/ticket_create.jpg)
+---
 
-### Ticket Details
-![Ticket Details](docs/images/ticket_show.jpg)
-
-### Audit Log
-![Audit Log](docs/images/audit.jpg)
+## 📍 Roadmap
+- Password reset & email notifications
+- File attachments on tickets
+- Export (CSV) for audit logs
+- Basic API endpoints for integration
+- Add minimal test suite (Pest/PHPUnit)
 
 ---
 
 ## 📜 License
-
-MIT – free to use, modify, and share.
-
----
+MIT — use freely.
 
 ## 🙋 Author
-
-**Mederick Bernier**  
-GitHub: [MederickBernier](https://github.com/MederickBernier)
+**Mederick Bernier** — GitHub: https://github.com/MederickBernier
